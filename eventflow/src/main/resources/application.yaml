@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: eventflow
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/event_platform
+    username: postgres
+    password: moreboi10
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
