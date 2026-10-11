@@ -1,11 +1,12 @@
 package com.eventflow.event.entity;
-import com.eventflow.organisation.entity.Organisation;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+
+import com.eventflow.organization.entity.Organization;
 
 @Entity
 @Table(name = "events")
@@ -39,13 +40,17 @@ public class Event {
     @Column(nullable = false)
     private Integer volunteerCapacity;
 
+    @Column(nullable = false)
+    private LocalDateTime applicationDeadline;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false , length = 30)
     private EventStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY , optional = false)
-    @JoinColumn(name = "organisation_id", nullable = false)
-    private Organisation organisation;
+    @JoinColumn(name = "organization_id", nullable = false)
+    private Organization organization;
+
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

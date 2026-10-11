@@ -1,8 +1,9 @@
-package com.eventflow.organisation.entity;
+package com.eventflow.organization.entity;
 
 
 import com.eventflow.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,11 +12,11 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "organisations")
+@Table(name = "organizations")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Organisation {
+public class Organization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
