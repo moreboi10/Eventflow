@@ -20,6 +20,10 @@ public record RegisterRequest(
      String password,
 
     @NotNull
-     Role role
+     Role role,
+
+    @NotNull
+    String phone
+
 ) {
 }

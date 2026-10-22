@@ -1,14 +1,16 @@
+
 package com.eventflow.organization.controller;
 
-import com.eventflow.organization.entity.Organization;
+import com.eventflow.organization.dto.CreateOrganizationRequest;
+import com.eventflow.organization.dto.OrganizationResponse;
 import com.eventflow.organization.service.OrganizationService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/organizations")
@@ -21,12 +23,29 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}")
-    public Organization getOrganization(@PathVariable Long id) {
-        return organizationService.getOrganizationById(id);
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<OrganizationResponse> getOrganization(
+            @PathVariable Long id) {
+        return ResponseEntity.ok(
+                organizationService.getOrganizationById(id)
+        );
     }
 
     @PostMapping
-    public Organization createOrganization(@RequestBody Organization organization) {
-        return organizationService.saveOrganization(organization);
+    @PreAuthorize("hasAnyRole('ORGANIZER', 'ADMIN')")
+    public ResponseEntity<Map<String, Object>> createOrganization(
+            @Valid @RequestBody CreateOrganizationRequest request) {
+
+        OrganizationResponse organization =
+                organizationService.createOrganization(request);
+
+        Map<String, Object> response = Map.of(
+                "id", organization.id(),
+                "name", organization.name(),
+                "description", organization.description() == null
+                        ? "" : organization.description()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

@@ -1,12 +1,13 @@
+
 package com.eventflow.event.entity;
+
+import com.eventflow.organization.entity.Organization;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-
-import com.eventflow.organization.entity.Organization;
 
 @Entity
 @Table(name = "events")
@@ -19,16 +20,16 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false , length = 200)
+    @Column(nullable = false, length = 200)
     private String title;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(length = 200)
+    @Column(nullable = false, length = 100)
     private String category;
 
-    @Column(length = 200)
+    @Column(nullable = false, length = 200)
     private String location;
 
     @Column(nullable = false)
@@ -44,17 +45,28 @@ public class Event {
     private LocalDateTime applicationDeadline;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false , length = 30)
+    @Column(nullable = false, length = 30)
     private EventStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY , optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
-
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        LocalDateTime now = LocalDateTime.now();
+        createdAt = now;
+        updatedAt = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

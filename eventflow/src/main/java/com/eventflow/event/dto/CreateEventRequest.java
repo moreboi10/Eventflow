@@ -1,7 +1,8 @@
+
 package com.eventflow.event.dto;
 
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -9,36 +10,33 @@ import java.time.LocalDateTime;
 
 public record CreateEventRequest(
 
-        @NotNull
-        @Size( max = 100)
+        @NotBlank
+        @Size(max = 200)
         String title,
 
         String description,
 
+        @NotBlank
         @Size(max = 100)
         String category,
 
-        @Size(max = 255)
+        @NotBlank
+        @Size(max = 200)
         String location,
 
         @NotNull
-        @Future
         LocalDateTime startTime,
 
         @NotNull
-        @Future
         LocalDateTime endTime,
 
         @NotNull
-        @Min(0)
+        @Min(1)
         Integer volunteerCapacity,
 
         @NotNull
-        @Future
         LocalDateTime applicationDeadline,
 
         @NotNull
         Long organizationId
-
-) {
-}
+) {}

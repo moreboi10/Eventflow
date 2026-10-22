@@ -1,13 +1,17 @@
+
 package com.eventflow.event.controller;
 
+import com.eventflow.event.dto.CreateEventRequest;
+import com.eventflow.event.dto.EventResponse;
 import com.eventflow.event.service.EventService;
-import com.eventflow.event.entity.Event;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -20,19 +24,27 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    @GetMapping("/{id}")
-    public Event getEvent(@PathVariable Long id) {
-        return eventService.getEventById(id);
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ORGANIZER', 'ADMIN')")
+    public ResponseEntity<EventResponse> createEvent(
+            @Valid @RequestBody CreateEventRequest request) {
+
+        EventResponse response = eventService.createEvent(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
-    public List<Event> getAllEvents() {
-        return eventService.getAllEvents();
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<EventResponse>> getAllEvents() {
+        return ResponseEntity.ok(eventService.getAllEvents());
     }
 
-    @PostMapping
-    public Event createEvent(@RequestBody Event event) {
-        return eventService.saveEvent(event);
-    }
+    @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<EventResponse> getEventById(
+            @PathVariable Long id) {
 
+        return ResponseEntity.ok(eventService.getEventById(id));
+    }
 }

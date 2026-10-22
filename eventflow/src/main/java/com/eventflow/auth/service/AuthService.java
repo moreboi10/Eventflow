@@ -51,6 +51,7 @@ public class AuthService {
                 passwordEncoder.encode(request.password())
         );
         user.setRole(request.role());
+        user.setPhone(request.phone());
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
 

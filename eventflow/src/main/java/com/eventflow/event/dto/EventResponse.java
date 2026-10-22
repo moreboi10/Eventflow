@@ -1,3 +1,4 @@
+
 package com.eventflow.event.dto;
 
 import com.eventflow.event.entity.EventStatus;
@@ -15,6 +16,6 @@ public record EventResponse(
         Integer volunteerCapacity,
         LocalDateTime applicationDeadline,
         EventStatus status,
-        Long organizationId
-) {
-}
+        Long organizationId,
+        String organizationName
+) {}
